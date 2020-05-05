@@ -1,29 +1,17 @@
 import React from 'react'
-import Input from '../Form/Input'
-import Label from '../Form/Label'
-import Box from '../Box'
+import InputWithLabel from '../Form/InputWithLabel'
 
 const SearchBar = () => {
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-    >
-      <Label 
-        htmlFor="search"
-        mr="12px"
-        // maybe create a variant for the styles below
-        fontWeight="700"
-        lineHeight="23px"
-      >
-        Find
-      </Label>
-      <Input 
-        name="search" 
-        placeholder="burgers, barbers, spas, handymen"
-        border="none"
-      />
-    </Box>
+    <InputWithLabel
+      label="Find"
+      htmlFor="search"
+      inputProps={{
+        name: 'search',
+        placeholder: 'burgers, spas, handymen...',
+        border: 'none',
+      }}
+    />
   )
 }
 
