@@ -1,5 +1,5 @@
-import React from 'react'
-import InputWithLabel from '../Form/InputWithLabel'
+import React from 'react';
+import InputWithLabel from '../Form/InputWithLabel';
 
 const SearchBar = () => {
   return (
@@ -12,7 +12,7 @@ const SearchBar = () => {
         border: 'none',
       }}
     />
-  )
-}
+  );
+};
 
 export default SearchBar;
