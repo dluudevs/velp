@@ -1,0 +1,8 @@
+Tech: NextJS, TypeScript, ChakraUI, maybe Redux ?
+
+MVP:
+ - autocomplete to suggest categories
+ - search by category, business name all in one search bar
+ - return results in card format with appropriate UI with pagination
+ - sort and filtering options
+ - redirect to page upon clicking card
