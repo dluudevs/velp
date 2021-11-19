@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { debounce } from "../utils/utils";
 
+import SearchInput from './SearchInput';
+
 type Params = {
   text: string;
   latitude: string;
@@ -58,7 +60,6 @@ const SearchField = () => {
   const fetchAutoCompleteResults = useCallback(
     debounce((query: string) => {
       const url = `${process.env.NEXT_PUBLIC_TOMTOM_SEARCH}/search/${query}.json?extendedPostalCodesFor=Addr&key=${process.env.NEXT_PUBLIC_TOMTOM_API_KEY}&language=en-US`;
-      console.log(url);
       fetch(url)
         .then((res) => res.json())
         .then((data) => {
@@ -102,17 +103,17 @@ const SearchField = () => {
   return (
     <div>
       <form>
-        <input
-          type="text"
+        <SearchInput
           placeholder="Find"
           value={searchValue}
           onChange={onSearchChange}
+          autocomplete={autocompleteSearch}
         />
-        <input
-          type="text"
+        <SearchInput
           placeholder="Location"
           value={locationValue}
           onChange={onLocationChange}
+          autocomplete={autocompleteLocations}
         />
       </form>
     </div>
