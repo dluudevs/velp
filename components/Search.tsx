@@ -1,8 +1,10 @@
-
 import React, { useState, useEffect, useCallback } from "react";
+import { Flex } from "@chakra-ui/react";
+import { uuid } from 'uuidv4';
+
 import { debounce } from "../utils/utils";
 
-import SearchInput from './SearchInput';
+import SearchInput from "./SearchInput";
 
 type Params = {
   text: string;
@@ -28,7 +30,7 @@ const SearchField = () => {
   const [searchValue, setSearchValue] = useState("");
   const [locationValue, setLocationValue] = useState("");
   const [autocompleteLocations, setAutocompleteLocations] = useState([]);
-  const [autocompleteSearch, setAutocompleteSearch] = useState([])
+  const [autocompleteSearch, setAutocompleteSearch] = useState([]);
 
   // debounce returns a function that gets passed to useCallback
   const fetchSearchResults = useCallback(
@@ -43,15 +45,17 @@ const SearchField = () => {
           authorization: process.env.NEXT_PUBLIC_API_KEY,
         },
       })
+        // improve debounce function to return a promise.json()
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
-          const searchWords = []
           const { businesses, terms } = data;
-          businesses?.forEach((b: { id: string; name: string }) => searchWords.push(b.name));
-          terms?.forEach((t: { text: string }) => searchWords.push(t.text))
-          setAutocompleteSearch(searchWords)
+          const searchWords = [];
+          businesses?.forEach((b: { id: string, name: string }) => searchWords.push({ id: b.id, searchTerm: b.name }));
+          terms?.forEach((term: { text: string }) =>
+            searchWords.push({ id: uuid(), searchTerm: term.text })
+          );
           console.log(searchWords)
+          setAutocompleteSearch(searchWords);
         });
     }),
     []
@@ -69,8 +73,17 @@ const SearchField = () => {
             )
             .sort((a: LocationObj, b: LocationObj) =>
               a.score > b.score ? -1 : 1
-            );
-          setAutocompleteLocations(addresses)
+            ) 
+            .map((add: LocationObj) => {
+              const { id } = add;
+              const { streetNumber, streetName, localName, countrySubdivision, countryCode } = add.address;
+            
+              return {
+                id,
+                searchTerm: `${streetNumber} ${streetName}, ${localName}, ${countrySubdivision}, ${countryCode}`
+              }
+          });
+          setAutocompleteLocations(addresses);
         });
     }, 500),
     []
@@ -102,12 +115,13 @@ const SearchField = () => {
 
   return (
     <div>
-      <form>
+      <Flex as="form">
         <SearchInput
           placeholder="Find"
           value={searchValue}
           onChange={onSearchChange}
           autocomplete={autocompleteSearch}
+          mr={4}
         />
         <SearchInput
           placeholder="Location"
@@ -115,7 +129,7 @@ const SearchField = () => {
           onChange={onLocationChange}
           autocomplete={autocompleteLocations}
         />
-      </form>
+      </Flex>
     </div>
   );
 };
